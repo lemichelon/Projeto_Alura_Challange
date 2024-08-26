@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Simples com Criptografia</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            position: relative;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px;
+            background-color: #6a1b9a; /* Roxo escuro */
+            color: white;
+            text-align: left;
+            border-bottom: 4px solid #ab47bc; /* Roxo claro */
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-grow: 1;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .input-container,
+        .output-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            margin: 0 20px;
+        }
+
+        .input-container {
+            align-items: flex-start;
+            max-width: 40%;
+        }
+
+        .output-container {
+            align-items: flex-end;
+            max-width: 40%;
+            background-color: #e8eaf6; /* Cinza claro */
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        input[type="text"] {
+            padding: 15px;
+            font-size: 18px;
+            width: 100%;
+            border: 2px solid #6a1b9a; /* Roxo escuro */
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ab47bc; /* Roxo claro */
+        }
+
+        #encrypted-output {
+            width: 100%;
+            height: 300px; /* Aumentado para 50% mais do tamanho original */
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #6a1b9a; /* Roxo escuro */
+            border-radius: 8px;
+            background-color: white;
+            resize: none;
+            box-sizing: border-box;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 360px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .encrypt-button {
+            background-color: #ab47bc; /* Roxo claro */
+            color: white;
+        }
+
+        .encrypt-button:hover {
+            background-color: #8e24aa; /* Roxo mais escuro */
+            transform: scale(1.05);
+        }
+
+        .decrypt-button {
+            background-color: #cfd8dc; /* Cinza claro */
+            color: black;
+        }
+
+        .decrypt-button:hover {
+            background-color: #b0bec5; /* Cinza mais escuro */
+            transform: scale(1.05);
+        }
+
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #6a1b9a; /* Roxo escuro */
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .copy-button:hover {
+            background-color: #8e24aa; /* Roxo mais escuro */
+        }
+
+        .message {
+            font-size: 14px;
+            color: #6a1b9a; /* Roxo escuro */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: #e53935; /* Vermelho claro */
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function validateInput() {
+            const input = document.getElementById('text-input').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (/^[a-z\s]+$/.test(input)) {
+                errorMessage.textContent = '';
+                return true;
+            } else {
+                errorMessage.textContent = 'Por favor, insira apenas letras minúsculas e sem acento.';
+                return false;
+            }
+        }
+
+        function encryptText() {
+            if (validateInput()) {
+                const input = document.getElementById('text-input').value;
+                const encryptedText = btoa(input);
+                document.getElementById('encrypted-output').value = encryptedText;
+                alert('Texto criptografado!');
+            }
+        }
+
+        function decryptText() {
+            try {
+                const input = document.getElementById('encrypted-output').value;
+                const decryptedText = atob(input);
+                document.getElementById('encrypted-output').value = decryptedText; // Exibindo a descriptografia no mesmo campo
+                alert('Texto descriptografado!');
+            } catch (e) {
+                alert('Texto inválido para descriptografia.');
+            }
+        }
+
+        function copyToClipboard() {
+            const encryptedText = document.getElementById('encrypted-output');
+            encryptedText.select();
+            document.execCommand('copy');
+            alert('Texto copiado para a área de transferência!');
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Criptografador Alexander</h1>
+    </header>
+
+    <main>
+        <div class="input-container">
+            <input type="text" id="text-input" placeholder="Digite seu texto aqui">
+            <div id="error-message" class="error-message"></div>
+            <div class="buttons">
+                <button class="encrypt-button" onclick="encryptText()">Criptografar</button>
+                <button class="decrypt-button" onclick="decryptText()">Descriptografar</button>
+            </div>
+        </div>
+        
+        <div class="output-container">
+            <textarea id="encrypted-output" readonly placeholder="Nenhuma mensagem encontrada. Digite um texto que você deseja criptografar ou descriptografar."></textarea>
+            <button class="copy-button" onclick="copyToClipboard()">Copiar</button>
+        </div>
+    </main>
+
+    <div class="container">
+        <div class="message">
+            Por favor, digite apenas letras minúsculas e sem acento.
+        </div>
+    </div>
+</body>
+</html>
